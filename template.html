@@ -16,7 +16,11 @@
 
   <table>
     {{range .Ingresses}}
-    <tr><td><a href="{{.Name}}">{{.Name}}</a></td></tr>
+    <tr>
+      <td>
+        <a href="{{.Name}}">{{.Name}}</a>
+      </td>
+    </tr>
     {{end}}
   </table>
 

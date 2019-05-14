@@ -1,6 +1,7 @@
 package main
 
 import (
+	"k8s.io/client-go/rest"
 	"os"
 
 	"github.com/flaccid/kunsul"
@@ -59,11 +60,18 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
+
 }
 
 func start(c *cli.Context) error {
-	config := kunsul.GetConfig(c.Bool("outside"))
-	log.Debug(config)
+	var (
+		config *rest.Config
+		err error
+	)
+	if config, err = kunsul.GetConfig(c.Bool("outside")); err != nil {
+		cli.ShowAppHelp(c)
+		return err
+	}
 	kunsul.Serve(config, c.String("directory"), c.Int("port"), c.Bool("listings"), c.Bool("access-log"))
 
 	return nil

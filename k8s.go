@@ -10,23 +10,23 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
-func GetIngresses(config *rest.Config) []v1beta1.Ingress {
+func GetIngresses(config *rest.Config) ([]v1beta1.Ingress, error) {
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 
 	ingressList, err := clientset.ExtensionsV1beta1().Ingresses("").List(metav1.ListOptions{})
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 	ingressCtrls := ingressList.Items
 
-	log.Debugf("there are %s ingresses in the cluster", len(ingressCtrls))
+	log.Debugf("DISCOVERED INGRESSES:> there are %s ingresses in the cluster", len(ingressCtrls))
 
 	for k, v := range ingressCtrls {
-		log.Debugf("key:", k, "value:", v)
+		log.Debugf("INGRESS %s:> %s", k, v)
 	}
 
-	return ingressCtrls
+	return ingressCtrls, nil
 }
