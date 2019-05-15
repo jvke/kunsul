@@ -9,27 +9,27 @@ import (
 
 var err error
 
-func GetConfig(outside bool) (config *rest.Config) {
-	if outside {
-		log.Debug("using outside-cluster authentication")
-		loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
-		configOverrides := &clientcmd.ConfigOverrides{}
-		kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, configOverrides)
-		config, err := kubeConfig.ClientConfig()
-		if err != nil {
+func GetConfig() (config *rest.Config, err error) {
+
+
+	log.Debugf("KUBE:> %s","try using in-cluster authentication")
+	if config, err = rest.InClusterConfig(); err != nil {
+		if err != rest.ErrNotInCluster {
 			log.Error(err)
+			return nil, err
 		}
-		log.Debug(config)
-
-		return config
-	} else {
-		log.Debug("using in-cluster authentication")
-		config, err = rest.InClusterConfig()
-		if err != nil {
-			panic(err.Error())
-		}
-		log.Debug(config)
-
-		return config
 	}
+
+	// else not in cluster
+	log.Debugf("KUBE:> %s","try outside-cluster authentication")
+	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+	configOverrides := &clientcmd.ConfigOverrides{}
+	kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, configOverrides)
+	if config, err = kubeConfig.ClientConfig(); err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	log.Debugf("CONFIG:> %s", config)
+	return config, nil
 }

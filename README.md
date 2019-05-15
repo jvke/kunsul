@@ -10,7 +10,15 @@ Kubernetes global ingress UI dashboard.
 
 `kunsul --help`
 
-For example, `kunsul -D --outside`
+For example, `kunsul -D`
+
+## Development
+
+`make docker-build`
+`make kube-test`
+
+Runs a pod against the current kube context.
+
 
 ## License
 
