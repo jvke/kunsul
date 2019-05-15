@@ -12,6 +12,14 @@ Kubernetes global ingress UI dashboard.
 
 For example, `kunsul -D --outside`
 
+## Development
+
+`make docker-build`
+`make docker-run`
+
+Runs a pod against the current kube context.
+
+
 ## License
 
 - Author: Chris Fordham (<chris@fordham.id.au>)
