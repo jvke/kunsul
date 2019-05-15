@@ -3,7 +3,7 @@ IMAGE_NAME = kunsul
 IMAGE_VERSION = latest
 IMAGE_ORG = flaccid
 IMAGE_TAG = $(DOCKER_REGISTRY)/$(IMAGE_ORG)/$(IMAGE_NAME):$(IMAGE_VERSION)
-export DOCKER_BUILDKIT=1
+export DOCKER_BUILDKIT = 1
 
 WORKING_DIR := $(shell pwd)
 
@@ -25,6 +25,11 @@ docker-build:: ## Builds the docker image locally
 			-t $(IMAGE_TAG) $(WORKING_DIR)
 
 docker-run:: ## Runs the docker image locally
+		@docker run \
+			-it \
+			$(DOCKER_REGISTRY)/$(IMAGE_ORG)/$(IMAGE_NAME):$(IMAGE_VERSION)
+
+kube-test:: ## Runs the docker image locally
 		@kubectl delete pod/kunsul --namespace default || true
 		@kubectl run --generator=run-pod/v1 --image=$(IMAGE_TAG) kunsul \
 		--port=8080 --namespace default \
