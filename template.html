@@ -8,21 +8,99 @@
   <title>{{.Title}}</title>
   <meta name="description" content="kunsul">
   <meta name="author" content="Chris Fordham">
+  <style type="text/css">
+    body,html { height: 100%; width: 100%; background-color:#e0f0f0;  }
+
+    h1,h2,h3{  margin: 0; padding: 0; color:#334455  }
+    h1 { border-bottom: 1px dotted #ccddee; padding: 20px;  font-size: 3em; }
+    h2 { padding: 30px; font-size: 2em; }
+    h3 {font-size: 0.9em;  }
+    h3 span{  color:#556677; font-weight: normal; }
+    a { color: #225577;  }
+    a:hover { color: #5588aa; }
+
+    .page-header ,
+    .page-body,
+    .page-footer{ width: 780px; margin: auto;   }
+
+    .page-header{ margin-bottom: 20px;}
+    .page-footer{ margin-bottom: 20px;}
+    .page-body{ border: 20px solid #d0f0f0; background-color: #e8f8f8; padding-bottom: 40px; }
+
+
+    .clear-float{ clear:both;}
+
+    .ingress-box {
+      border-top: 1px dotted #d0e0e0;  position: relative;
+      margin: 0 20px; padding: 10px;
+    }
+    .ingress-box h3{
+      width: 49%;   position: absolute;
+      margin-left: 5px; left:0;
+    }
+    .ingress-box ul{ width: 47%;   position: relative; left:52%;   }
+
+    .ingress-box a {   border-left: 5px solid orange; padding-left: 7px; }
+    .page-body ul { list-style: none; padding: 0px; margin: 0px; }
+    .page-body ul li { list-style: none; padding: 0px; margin-bottom: 5px;  }
+
+    .message{ position: relative;}
+    .message .alert{ color:red; font-size:1.5em; }
+    .message .caption{ font-size: 0.8em; top:-6px; position: relative;  }
+  </style>
 </head>
 
 <body>
 
-  <h1>{{.Title}}</h1>
+  <div class="page-header" >
+    <h1>kunsul</h1>
+  </div>
 
-  <table>
+  <div class="page-body" >
+    <h2> Ingresses</h2>
+
     {{range .Ingresses}}
-    <tr>
-      <td>
-        <a href="{{.Name}}">{{.Name}}</a>
-      </td>
-    </tr>
+    <div class="ingress-box">
+      {{/*<textarea cols="100" rows="30">*/}}
+        {{/*{{. | toPrettyJson}}*/}}
+        {{/*{{ .Spec | toPrettyJson}}*/}}
+      {{/*</textarea>*/}}
+
+
+      <h3><span>{{.Namespace}} -</span> {{.Name}}</h3>
+
+
+      <ul>
+        {{ $protocol := .Spec.TLS | empty | ternary "http" "https" }}
+        {{ range $index, $rule := .Spec.Rules }}
+          <li>
+
+            <a href="{{$protocol}}://{{ $rule.Host }}" target="_blank">
+              {{$protocol}}://{{ $rule.Host }}
+            </a>
+          </li>
+        {{ end }}
+
+        {{ if eq (len .Spec.Rules) 0 }}
+          <div class="message">
+            <span class="alert" title="Beware this catch all ingress">* </span>
+            <span class="caption">&#8604; Beware this catch all ingress</span>
+          </div>
+        {{ end }}
+
+      </ul>
+
+
+
+    </div>
     {{end}}
-  </table>
+    <div class="clear-float"></div>
+  </div>
+
+  <div class="page-footer" >
+    <h1></h1>
+  </div>
+
 
 </body>
 

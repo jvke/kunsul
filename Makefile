@@ -3,10 +3,11 @@ IMAGE_NAME = kunsul
 IMAGE_VERSION = latest
 IMAGE_ORG = flaccid
 IMAGE_TAG = $(DOCKER_REGISTRY)/$(IMAGE_ORG)/$(IMAGE_NAME):$(IMAGE_VERSION)
+export DOCKER_BUILDKIT=1
 
 WORKING_DIR := $(shell pwd)
 
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := docker-build
 
 .PHONY: build push
 
@@ -24,9 +25,15 @@ docker-build:: ## Builds the docker image locally
 			-t $(IMAGE_TAG) $(WORKING_DIR)
 
 docker-run:: ## Runs the docker image locally
-		@docker run \
-			-it \
-			$(DOCKER_REGISTRY)/$(IMAGE_ORG)/$(IMAGE_NAME):$(IMAGE_VERSION)
+		@kubectl delete pod/kunsul --namespace default || true
+		@kubectl run --generator=run-pod/v1 --image=$(IMAGE_TAG) kunsul \
+		--port=8080 --namespace default \
+		--image-pull-policy Never
+		@sleep 1 \
+		&& kubectl wait --for=condition=Ready pod/kunsul --namespace default \
+		&& kubectl port-forward pod/kunsul 8080:8080 --namespace default \
+		&& kubectl delete pod/kunsul --namespace default || true
+
 
 # A help target including self-documenting targets (see the awk statement)
 define HELP_TEXT

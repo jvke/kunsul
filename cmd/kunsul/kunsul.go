@@ -29,10 +29,6 @@ func main() {
 	app.Action = start
 	app.Before = beforeApp
 	app.Flags = []cli.Flag{
-		cli.BoolFlag{
-			Name:  "outside,o",
-			Usage: "enable outside-cluster authentcation",
-		},
 		// TODO: implement static file support for overlay
 		// cli.StringFlag{
 		// 	Name:  "directory,d",
@@ -47,6 +43,21 @@ func main() {
 			Name:  "port,p",
 			Usage: "port the listen on",
 			Value: 8080,
+		},
+		cli.StringFlag{
+			Name:  "config-dir,c",
+			Usage: "configuration directory",
+			Value: (func() string {
+				if rt, err := os.Getwd() ; err == nil {
+					return rt
+				}
+				return ""
+			} )(),
+		},
+		cli.StringFlag{
+			Name:  "template,t",
+			Usage: "template file",
+			Value: "template.html",
 		},
 		// todo: KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT
 		// todo: always on, need to implement
@@ -68,11 +79,16 @@ func start(c *cli.Context) error {
 		config *rest.Config
 		err error
 	)
-	if config, err = kunsul.GetConfig(c.Bool("outside")); err != nil {
+	if config, err = kunsul.GetConfig(); err != nil {
 		cli.ShowAppHelp(c)
 		return err
 	}
-	kunsul.Serve(config, c.String("directory"), c.Int("port"), c.Bool("listings"), c.Bool("access-log"))
+	kunsul.Serve(config,
+		c.String("config-dir"),
+		c.String("template"),
+		c.Int("port"),
+		c.Bool("listings"),
+		c.Bool("access-log"))
 
 	return nil
 }
