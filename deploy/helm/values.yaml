@@ -22,8 +22,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: localhost
-      paths: []
+    - host: kunsul.127.0.0.1.nip.io
 
   # tls: []
   #  - secretName: chart-example-tls
