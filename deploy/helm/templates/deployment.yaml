@@ -19,6 +19,9 @@ spec:
         app.kubernetes.io/name: {{ include "kunsul.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.rbac.enabled }}
+      serviceAccountName: {{ include "kunsul.fullname" . }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
