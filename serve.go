@@ -5,7 +5,7 @@ import (
 	"k8s.io/client-go/rest"
 	"net/http"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 var (

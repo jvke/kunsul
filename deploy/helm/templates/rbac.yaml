@@ -1,0 +1,52 @@
+{{ if .Values.rbac.create -}}
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "kunsul.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kunsul.name" . }}
+    helm.sh/chart: {{ include "kunsul.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "kunsul.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kunsul.name" . }}
+    helm.sh/chart: {{ include "kunsul.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints", "services", "pods", "namespaces"]
+    verbs: ["get", "list"]
+  - apiGroups: ["extensions"]
+    resources: ["ingresses"]
+    verbs: ["get", "list"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "kunsul.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kunsul.name" . }}
+    helm.sh/chart: {{ include "kunsul.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "kunsul.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "kunsul.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+
+{{ end -}}

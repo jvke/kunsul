@@ -2,7 +2,7 @@ package kunsul
 
 import (
 	"github.com/Masterminds/sprig"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"html/template"
 	"k8s.io/api/extensions/v1beta1"
 	"k8s.io/client-go/rest"
