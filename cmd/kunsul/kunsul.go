@@ -5,12 +5,13 @@ import (
 	"os"
 
 	"github.com/flaccid/kunsul"
-	"github.com/urfave/cli"
 	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 var (
-	VERSION = "v0.0.0-dev"
+	VERSION      = "v0.0.0-dev"
+	templateFile = "/usr/share/kunsul/template.html"
 )
 
 func beforeApp(c *cli.Context) error {
@@ -49,7 +50,16 @@ func main() {
 		cli.StringFlag{
 			Name:  "template,t",
 			Usage: "html template file",
-			Value: "/usr/share/kunsul/template.html",
+			Value: (func() string {
+				if _, err := os.Stat(templateFile); os.IsNotExist(err) {
+					cwd, err := os.Getwd()
+					if err != nil {
+						log.Fatal(err)
+					}
+					return cwd + "/template.html"
+				}
+				return templateFile
+			})(),
 		},
 		// todo: KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT
 		// todo: always on, need to implement
@@ -69,7 +79,7 @@ func main() {
 func start(c *cli.Context) error {
 	var (
 		config *rest.Config
-		err error
+		err    error
 	)
 	if config, err = kunsul.GetConfig(); err != nil {
 		cli.ShowAppHelp(c)
