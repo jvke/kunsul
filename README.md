@@ -12,13 +12,32 @@ Kubernetes global ingress UI dashboard.
 
 For example, `kunsul -D`
 
+### Helm Chart
+
+Validate the chart:
+
+`helm lint ./charts/kunsul`
+
+Install the chart:
+
+`helm install --name kunsul ./charts/kunsul`
+
+Upgrade the chart:
+
+`helm upgrade kunsul ./charts/kunsul`
+
+Testing after deployment:
+
+`helm test kunsul`
+
 ## Development
+
+See all Make targets using `make help`.
+
+For example, this runs a pod against the current kube context.
 
 `make docker-build`
 `make kube-test`
-
-Runs a pod against the current kube context.
-
 
 ## License
 
