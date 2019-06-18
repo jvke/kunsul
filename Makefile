@@ -11,6 +11,9 @@ WORKING_DIR := $(shell pwd)
 
 .PHONY: build push
 
+go-deps:: ## fetch all the go dependencies
+		go get ./...
+
 docker-release:: docker-build docker-push ## builds and pushes the docker image to the registry
 
 docker-push:: ## pushes the docker image to the registry
