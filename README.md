@@ -16,15 +16,15 @@ For example, `kunsul -D`
 
 Validate the chart:
 
-`helm lint ./charts/kunsul`
+`helm lint charts/kunsul`
 
 Install the chart:
 
-`helm install --name kunsul ./charts/kunsul`
+`helm install --name kunsul charts/kunsul`
 
 Upgrade the chart:
 
-`helm upgrade kunsul ./charts/kunsul`
+`helm upgrade kunsul charts/kunsul`
 
 Testing after deployment:
 
