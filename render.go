@@ -1,6 +1,7 @@
 package kunsul
 
 import (
+	"path/filepath"
 	"html/template"
 	"net/http"
 
@@ -16,6 +17,10 @@ type PageData struct {
 	Ingresses []v1beta1.Ingress
 	Services  []v1.Service
 }
+
+var (
+	tmpl *template.Template
+)
 
 func render(w http.ResponseWriter, r *http.Request, rest *rest.Config, configDir string, templateFile string) {
 	var ingresses []v1beta1.Ingress
@@ -33,22 +38,23 @@ func render(w http.ResponseWriter, r *http.Request, rest *rest.Config, configDir
 	}
 	log.Debugf("SERVICES:>  %s", services)
 
-	var tmpl *template.Template
-
-	if tmpl, err = template.New(templateFile).Funcs(sprig.FuncMap()).ParseFiles(templateFile); err != nil {
+	if tmpl, err = template.New(filepath.Base(templateFile)).Funcs(sprig.FuncMap()).ParseFiles(templateFile); err != nil {
 		writeHtmlErrorResponse(w, err)
 		return
 	}
-	log.Debugf("TEMPLATES:>  %s", tmpl.DefinedTemplates())
+	log.Debug(tmpl.DefinedTemplates())
+
 	pageData := PageData{
 		Ingresses: ingresses,
 		Services:  services,
 	}
+
 	log.Debugf("PAGEDATA:>  %s", pageData)
 	log.Debugf("PAGEDATA INGRESSES:> %s", pageData.Ingresses)
 
 	if err := tmpl.Execute(w, pageData); err != nil {
 		writeHtmlErrorResponse(w, err)
+		log.Debugf("errored template: %s", tmpl)
 		return
 	}
 }
