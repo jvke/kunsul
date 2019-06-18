@@ -35,29 +35,21 @@ func main() {
 		// 	Usage: "directory of static files to host",
 		// 	Value: "./",
 		// },
-		cli.BoolFlag{
-			Name:  "listings,l",
-			Usage: "enable directory listings",
-		},
 		cli.IntFlag{
 			Name:  "port,p",
 			Usage: "port the listen on",
 			Value: 8080,
 		},
+		// for for future use when a config file might be used
 		cli.StringFlag{
 			Name:  "config-dir,c",
 			Usage: "configuration directory",
-			Value: (func() string {
-				if rt, err := os.Getwd() ; err == nil {
-					return rt
-				}
-				return ""
-			} )(),
+			Value: "/etc/kunsul",
 		},
 		cli.StringFlag{
 			Name:  "template,t",
-			Usage: "template file",
-			Value: "template.html",
+			Usage: "html template file",
+			Value: "/usr/share/kunsul/template.html",
 		},
 		// todo: KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT
 		// todo: always on, need to implement
@@ -87,7 +79,6 @@ func start(c *cli.Context) error {
 		c.String("config-dir"),
 		c.String("template"),
 		c.Int("port"),
-		c.Bool("listings"),
 		c.Bool("access-log"))
 
 	return nil

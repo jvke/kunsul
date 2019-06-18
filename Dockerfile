@@ -6,7 +6,5 @@ RUN go get ./... && \
 
 FROM gcr.io/distroless/static
 COPY --from=builder /kunsul /kunsul
-COPY template.html /etc/kunsul/template.html
-WORKDIR /
-ENTRYPOINT ["./kunsul"]
-CMD ["--config-dir", "/etc/kunsul", "--template" , "template.html"]
+COPY template.html /usr/share/kunsul/template.html
+ENTRYPOINT ["/kunsul"]
