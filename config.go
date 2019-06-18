@@ -10,8 +10,6 @@ import (
 var err error
 
 func GetConfig() (config *rest.Config, err error) {
-
-
 	log.Debugf("KUBE:> %s","try using in-cluster authentication")
 	if config, err = rest.InClusterConfig(); err != nil {
 		if err != rest.ErrNotInCluster {
