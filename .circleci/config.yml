@@ -1,0 +1,35 @@
+version: 2
+
+machine:
+  services:
+    - docker
+
+jobs:
+  build:
+    docker:
+      - image: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker info
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t flaccid/kunsul .
+  publish:
+    docker:
+      - image: docker
+    steps:
+      - run: docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
+      - run: docker push flaccid/salt
+workflows:
+  version: 2
+  build_and_publish:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
