@@ -6,7 +6,7 @@ import (
 
 	"github.com/flaccid/kunsul"
 	"github.com/urfave/cli"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
