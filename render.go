@@ -4,11 +4,11 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/Masterminds/sprig"
+	"github.com/masterminds/sprig"
 	"k8s.io/api/core/v1"
 	"k8s.io/api/extensions/v1beta1"
 	"k8s.io/client-go/rest"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type PageData struct {
