@@ -30,6 +30,10 @@ Testing after deployment:
 
 `helm test kunsul`
 
+Completely remove the chart:
+
+`helm delete --purge kunsul`
+
 ## Development
 
 See all Make targets using `make help`.

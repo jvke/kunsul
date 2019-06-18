@@ -176,30 +176,25 @@
 
     <h2>Services</h2>
 
-    {{range .Services}}
-    <div class="ingress-box">
-      {{/*<textarea cols="100" rows="30">*/}}
-      {{/*{{. | toPrettyJson}}*/}}
-      {{/*{{ .Spec | toPrettyJson}}*/}}
-      {{/*</textarea>*/}}
-
-      <h3><span>{{.Namespace}} -</span> {{.Name}}</h3>
-
-      <ul>
-        {{ range $index, $externalIp := .Spec.ExternalIPs }}
-        <li>{{ $rule.externalIp }}</li>
-        {{ end }}
+    <div>
+      <table>
+        <tr>
+          <th>Namespace</th><th>Name</th><th>ClusterIp</th><th>Public Endpoints</th>
+        </tr>
+        {{range .Services}}
+        <tr>
+          <td>{{.Namespace}}<td>{{.Name}}</td><td>{{.Spec.ClusterIP}}</td><td>{{.Spec}}</td>
+        </tr>
+        {{end}}
       </ul>
-
     </div>
-    {{end}}
+
     <div class="clear-float"></div>
   </div>
 
   <div class="page-footer">
-    <h1></h1>
-  </div>
 
+  </div>
 
 </body>
 
